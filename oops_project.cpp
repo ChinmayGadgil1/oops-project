@@ -22,33 +22,80 @@
 
 //  This is a simple ticket booking system that allows the user to create, edit, append price to, and display tickets.
 
-
-#include <iostream>
-#include <thread>  
-#include <chrono>  
-#include <fstream>
-#include <vector>
-#include <iomanip>
-#include <ctime>
-#include <sstream>
-#include <string>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-#define RESET   "\033[0m"
-#define RED     "\033[31m"
-#define GREEN   "\033[32m"
-#define YELLOW  "\033[33m"
-#define BLUE    "\033[34m"
+#define RESET "\033[0m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define BLUE "\033[34m"
 #define MAGENTA "\033[35m"
-#define CYAN    "\033[36m"
-#define WHITE   "\033[37m"
+#define CYAN "\033[36m"
+#define WHITE "\033[37m"
 
-void showSpinner(int duration) {
+map<int, string> cities = {
+    {1, "Valpoi"}, {2, "Panaji"}, {3, "Mhapsa"}, {4, "Margao"}, {5, "Bicholim"},
+    {6, "Ponda"}, {7, "Pernem"}, {8, "Vasco"}, {9, "Canacona"}, {10, "Sanguem"},
+    {11, "Dharbandoda"}, {12, "Quepem"}
+};
+
+map<pair<int, int>, int> distances = {
+    // Distances from Valpoi (1)
+    {{1, 2}, 37}, {{1, 3}, 30}, {{1, 4}, 63}, {{1, 5}, 23}, {{1, 6}, 38},
+    {{1, 7}, 38}, {{1, 8}, 50}, {{1, 9}, 90}, {{1, 10}, 78}, {{1, 11}, 50}, {{1, 12}, 65},
+
+    // Distances from Panaji (2)
+    {{2, 3}, 13}, {{2, 4}, 33}, {{2, 5}, 25}, {{2, 6}, 28}, {{2, 7}, 27},
+    {{2, 8}, 30}, {{2, 9}, 70}, {{2, 10}, 65}, {{2, 11}, 45}, {{2, 12}, 60},
+
+    // Distances from Mhapsa (3)
+    {{3, 4}, 45}, {{3, 5}, 20}, {{3, 6}, 35}, {{3, 7}, 21}, {{3, 8}, 45},
+    {{3, 9}, 75}, {{3, 10}, 60}, {{3, 11}, 55}, {{3, 12}, 70},
+
+    // Distances from Margao (4)
+    {{4, 5}, 50}, {{4, 6}, 20}, {{4, 7}, 60}, {{4, 8}, 28}, {{4, 9}, 35},
+    {{4, 10}, 45}, {{4, 11}, 38}, {{4, 12}, 18},
+
+    // Distances from Bicholim (5)
+    {{5, 6}, 30}, {{5, 7}, 25}, {{5, 8}, 45}, {{5, 9}, 85}, {{5, 10}, 65},
+    {{5, 11}, 43}, {{5, 12}, 58},
+
+    // Distances from Ponda (6)
+    {{6, 7}, 45}, {{6, 8}, 35}, {{6, 9}, 60}, {{6, 10}, 50}, {{6, 11}, 40}, {{6, 12}, 35},
+
+    // Distances from Pernem (7)
+    {{7, 8}, 50}, {{7, 9}, 85}, {{7, 10}, 75}, {{7, 11}, 65}, {{7, 12}, 80},
+
+    // Distances from Vasco (8)
+    {{8, 9}, 55}, {{8, 10}, 45}, {{8, 11}, 40}, {{8, 12}, 50},
+
+    // Distances from Canacona (9)
+    {{9, 10}, 35}, {{9, 11}, 45}, {{9, 12}, 30},
+
+    // Distances from Sanguem (10)
+    {{10, 11}, 25}, {{10, 12}, 20},
+
+    // Distances from Dharbandoda (11)
+    {{11, 12}, 40}
+};
+
+void printCities(){
+    for (auto i: cities)
+    {
+        cout<<MAGENTA<<i.first<<". "<<i.second<<"\n";
+    }
+    cout<<RESET;
+}
+
+void showSpinner(int duration)
+{
     const char spinner[] = {'|', '/', '-', '\\'};
     int spinnerIndex = 0;
     auto start = chrono::high_resolution_clock::now();
-    while (chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - start).count() < duration) {
+    while (chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - start).count() < duration)
+    {
         cout << "\r" << spinner[spinnerIndex++] << flush;
         spinnerIndex %= 4;
     }
@@ -60,9 +107,10 @@ class Ticket
 private:
     string cname;
     int tno;
-    string destination;
+    int start;
+    int destination;
     string filename;
-
+    int distance;
 public:
     Ticket() : tno(0) {}
 
@@ -71,14 +119,21 @@ public:
         cin.ignore();
         cout << "Enter customer name: ";
         getline(cin, cname);
-    
+
         cout << "Enter ticket number: ";
         cin >> tno;
+
+        cout<<"Enter start location:\n";
+        printCities();
+        cin>>start;
+
+        cout<<"Enter destination location:\n";
+        printCities();
+        cin>>destination;
+
+        distance = distances[{start, destination}];
         
-        cout << "Enter destination address: ";
-        cin.ignore();
-        getline(cin, destination);
-        showSpinner(2); 
+        showSpinner(2);
 
         filename = to_string(tno) + ".txt";
 
@@ -119,10 +174,28 @@ public:
                 ticketFile << " ";
             }
             ticketFile << "|\n";
-            ticketFile << "| Destination: " << destination;
-            for (int i = destination.length(); i < 26; i++)
+            ticketFile << "| Start: " << cities[start];
+            for (int i = cities[start].length(); i < 32; i++)
             {
                 ticketFile << " ";
+            }
+            ticketFile << "|\n";
+            ticketFile << "| Destination: " << cities[destination];
+            for (int i = cities[destination].length(); i < 26; i++)
+            {
+                ticketFile << " ";
+            }
+            ticketFile << "|\n";
+            ticketFile << "| Distance: " << distance<<"km";
+            for (int i = to_string(distance).length(); i < 27; i++)
+            {
+                ticketFile << " ";
+            }
+            ticketFile<<"|\n";
+            ticketFile<< "| Price: "<<"₹"<<setw(3)<<distance*2;
+            for (int i = to_string(distance).length(); i < 30; i++)
+            {
+                ticketFile<<" ";
             }
             ticketFile << "|\n";
             ticketFile << "------------------------------------------\n";
@@ -140,7 +213,7 @@ public:
         int newTno;
         cout << "Enter the new ticket number: ";
         cin >> newTno;
-        showSpinner(2); 
+        showSpinner(2);
         string newFilename = to_string(newTno) + ".txt";
 
         ifstream ticketFileIn(filename);
@@ -152,9 +225,14 @@ public:
             int count = 1;
             while (getline(ticketFileIn, line))
             {
-                if (count == 5)
+                if (count == 6)
                 {
-                    content += "Ticket Number: " + to_string(newTno) + "\n";
+                    content += "| Ticket Number: " + to_string(newTno);
+                    for (int i = to_string(newTno).length(); i < 24; i++)
+                    {
+                        content+=" ";
+                    }
+                    content+="|\n";
                     count++;
                     continue;
                 }
@@ -188,57 +266,6 @@ public:
         else
         {
             cout << "Error updating ticket number" << endl;
-        }
-    }
-
-    void appendPrice()
-    {
-        double price;
-        cout << "Enter the price: ";
-        cin >> price;
-        showSpinner(2); 
-
-        ifstream ticketFileIn(filename);
-        string line;
-        string content;
-        bool priceFound = false;
-
-        if (ticketFileIn.is_open())
-        {
-            for (int i = 0; i < 7; i++)
-            {
-                getline(ticketFileIn, line);
-                content += line + "\n";
-            }
-            stringstream stream;
-            stream << fixed << setprecision(2) << price;
-            content += "| Price: " + stream.str();
-            for (int i = to_string(price).length(); i < 36; i++)
-            {
-                content += " ";
-            }
-            content += "|\n";
-            getline(ticketFileIn, line);
-            if (line.find("---") == string::npos)
-            {
-                getline(ticketFileIn, line);
-            }
-            content += line + "\n";
-        }
-        else
-        {
-            cout << "Unable to open file" << endl;
-            return;
-        }
-
-        ofstream ticketFileOut(filename);
-        if (ticketFileOut.is_open())
-        {
-            ticketFileOut << content;
-        }
-        else
-        {
-            cout << "Unable to open file" << endl;
         }
     }
 
@@ -280,13 +307,12 @@ int main()
 
     while (true)
     {
-        showSpinner(1); 
+        showSpinner(1);
         cout << "\nMenu:" << endl;
         cout << "1. Enter ticket details" << endl;
         cout << "2. Edit ticket number" << endl;
-        cout << "3. Append price to ticket" << endl;
-        cout << "4. Display ticket" << endl;
-        cout << "5. Exit" << endl;
+        cout << "3. Display ticket" << endl;
+        cout << "4. Exit" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -318,26 +344,6 @@ int main()
         }
         else if (choice == 3)
         {
-            cout << "Enter the ticket number you want to append price to: ";
-            int ticketNumber;
-            bool found = false;
-            cin >> ticketNumber;
-            for (auto &i : tickets)
-            {
-                if (i.getTicketNumber() == ticketNumber)
-                {
-                    i.appendPrice();
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-            {
-                cout << "Ticket not found" << endl;
-            }
-        }
-        else if (choice == 4)
-        {
             cout << "Enter the ticket number you want to display: ";
             int ticketNumber;
             cin >> ticketNumber;
@@ -360,7 +366,7 @@ int main()
                 cout << "Ticket not found" << endl;
             }
         }
-        else if (choice == 5)
+        else if (choice == 4)
         {
             break;
         }
