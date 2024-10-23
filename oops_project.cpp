@@ -1,29 +1,4 @@
-// The MIT License (MIT)
-
-// Copyright (c) 2024 Chinmay Girish Gadgil
-
-//  Permission is hereby granted, free of charge, to any person obtaining a
-//  copy of this software and associated documentation files (the "Software"),
-//  to deal in the Software without restriction, including without limitation
-//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//  and/or sell copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-//  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-//  DEALINGS IN THE SOFTWARE.
-
-//  This is a simple ticket booking system that allows the user to create, edit, append price to, and display tickets.
-
 #include <bits/stdc++.h>
-
 using namespace std;
 
 #define RESET "\033[0m"
@@ -42,42 +17,37 @@ map<int, string> cities = {
 };
 
 map<pair<int, int>, int> distances = {
-    // Distances from Valpoi (1)
+  
     {{1, 2}, 37}, {{1, 3}, 30}, {{1, 4}, 63}, {{1, 5}, 23}, {{1, 6}, 38},
     {{1, 7}, 38}, {{1, 8}, 50}, {{1, 9}, 90}, {{1, 10}, 78}, {{1, 11}, 50}, {{1, 12}, 65},
 
-    // Distances from Panaji (2)
     {{2, 3}, 13}, {{2, 4}, 33}, {{2, 5}, 25}, {{2, 6}, 28}, {{2, 7}, 27},
     {{2, 8}, 30}, {{2, 9}, 70}, {{2, 10}, 65}, {{2, 11}, 45}, {{2, 12}, 60},
 
-    // Distances from Mhapsa (3)
+
     {{3, 4}, 45}, {{3, 5}, 20}, {{3, 6}, 35}, {{3, 7}, 21}, {{3, 8}, 45},
     {{3, 9}, 75}, {{3, 10}, 60}, {{3, 11}, 55}, {{3, 12}, 70},
 
-    // Distances from Margao (4)
+
     {{4, 5}, 50}, {{4, 6}, 20}, {{4, 7}, 60}, {{4, 8}, 28}, {{4, 9}, 35},
     {{4, 10}, 45}, {{4, 11}, 38}, {{4, 12}, 18},
 
-    // Distances from Bicholim (5)
     {{5, 6}, 30}, {{5, 7}, 25}, {{5, 8}, 45}, {{5, 9}, 85}, {{5, 10}, 65},
     {{5, 11}, 43}, {{5, 12}, 58},
 
-    // Distances from Ponda (6)
+
     {{6, 7}, 45}, {{6, 8}, 35}, {{6, 9}, 60}, {{6, 10}, 50}, {{6, 11}, 40}, {{6, 12}, 35},
 
-    // Distances from Pernem (7)
+   
     {{7, 8}, 50}, {{7, 9}, 85}, {{7, 10}, 75}, {{7, 11}, 65}, {{7, 12}, 80},
 
-    // Distances from Vasco (8)
     {{8, 9}, 55}, {{8, 10}, 45}, {{8, 11}, 40}, {{8, 12}, 50},
 
-    // Distances from Canacona (9)
+    
     {{9, 10}, 35}, {{9, 11}, 45}, {{9, 12}, 30},
 
-    // Distances from Sanguem (10)
     {{10, 11}, 25}, {{10, 12}, 20},
 
-    // Distances from Dharbandoda (11)
     {{11, 12}, 40}
 };
 
@@ -99,7 +69,7 @@ void showSpinner(int duration)
         cout << "\r" << spinner[spinnerIndex++] << flush;
         spinnerIndex %= 4;
     }
-    cout << "\r" << " " << "\r"; // Clear the spinner
+    cout << "\r" << " " << "\r";
 }
 
 int getLastTicketNumber()
@@ -139,12 +109,11 @@ public:
     Ticket() : tno(0) {}
 
     void createTicket()
-{
+    {
     cin.ignore();
     cout << YELLOW << "Enter customer name: " << RESET;
     getline(cin, cname);
 
-    // Auto-generate ticket number
     int lastTicketNumber = getLastTicketNumber();
     tno = lastTicketNumber + 1;
     updateLastTicketNumber(tno);
@@ -179,7 +148,7 @@ public:
     if (ticketFile.is_open())
     {
         ticketFile << "------------------------------------------\n";
-        ticketFile << "|                  TICKET                |\n";
+        ticketFile << "|                 TICKET                 |\n";
         ticketFile << "------------------------------------------\n";
         time_t now = time(0);
         tm *ltm = localtime(&now);
@@ -299,25 +268,6 @@ public:
         }
     }
 
-    void displayTicket() const
-    {
-        ifstream ticketFile(filename);
-        string line;
-
-        if (ticketFile.is_open())
-        {
-            while (getline(ticketFile, line))
-            {
-                cout << CYAN << line << endl;
-            }
-            cout<<RESET;
-            ticketFile.close();
-        }
-        else
-        {
-            cout <<RED<< "Unable to open file"<<RESET << endl;
-        }
-    }
 
     int getTicketNumber() const
     {
