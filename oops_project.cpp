@@ -372,7 +372,7 @@ int main()
         }
         else
         {
-            cout << "Invalid choice. Please try again." << endl;
+            cout << "Invalid choice. Please try again ." << endl;
         }
     }
 
