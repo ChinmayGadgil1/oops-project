@@ -284,7 +284,6 @@ public:
 int main()
 {
     int choice;
-    vector<Ticket> tickets;
 
     while (true)
     {
@@ -301,7 +300,6 @@ int main()
         {
             Ticket ticket;
             ticket.createTicket();
-            tickets.push_back(ticket);
         }
         else if (choice == 2)
         {
