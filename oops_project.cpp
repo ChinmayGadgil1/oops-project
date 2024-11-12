@@ -11,52 +11,84 @@ using namespace std;
 #define WHITE "\033[37m"
 
 map<int, string> cities = {
-    {1, "Valpoi"}, {2, "Panaji"}, {3, "Mhapsa"}, {4, "Margao"}, {5, "Bicholim"},
-    {6, "Ponda"}, {7, "Pernem"}, {8, "Vasco"}, {9, "Canacona"}, {10, "Sanguem"},
-    {11, "Dharbandoda"}, {12, "Quepem"}
-};
+    {1, "Valpoi"}, {2, "Panaji"}, {3, "Mhapsa"}, {4, "Margao"}, {5, "Bicholim"}, {6, "Ponda"}, {7, "Pernem"}, {8, "Vasco"}, {9, "Canacona"}, {10, "Sanguem"}, {11, "Dharbandoda"}, {12, "Quepem"}};
 
 map<pair<int, int>, int> distances = {
-  
-    {{1, 2}, 37}, {{1, 3}, 30}, {{1, 4}, 63}, {{1, 5}, 23}, {{1, 6}, 38},
-    {{1, 7}, 38}, {{1, 8}, 50}, {{1, 9}, 90}, {{1, 10}, 78}, {{1, 11}, 50}, {{1, 12}, 65},
 
-    {{2, 3}, 13}, {{2, 4}, 33}, {{2, 5}, 25}, {{2, 6}, 28}, {{2, 7}, 27},
-    {{2, 8}, 30}, {{2, 9}, 70}, {{2, 10}, 65}, {{2, 11}, 45}, {{2, 12}, 60},
+    {{1, 2}, 37}, {{1, 3}, 30}, {{1, 4}, 63}, {{1, 5}, 23}, {{1, 6}, 38}, {{1, 7}, 38}, {{1, 8}, 50}, {{1, 9}, 90}, {{1, 10}, 78}, {{1, 11}, 50}, {{1, 12}, 65},
 
+    {{2, 3}, 13},
+    {{2, 4}, 33},
+    {{2, 5}, 25},
+    {{2, 6}, 28},
+    {{2, 7}, 27},
+    {{2, 8}, 30},
+    {{2, 9}, 70},
+    {{2, 10}, 65},
+    {{2, 11}, 45},
+    {{2, 12}, 60},
 
-    {{3, 4}, 45}, {{3, 5}, 20}, {{3, 6}, 35}, {{3, 7}, 21}, {{3, 8}, 45},
-    {{3, 9}, 75}, {{3, 10}, 60}, {{3, 11}, 55}, {{3, 12}, 70},
+    {{3, 4}, 45},
+    {{3, 5}, 20},
+    {{3, 6}, 35},
+    {{3, 7}, 21},
+    {{3, 8}, 45},
+    {{3, 9}, 75},
+    {{3, 10}, 60},
+    {{3, 11}, 55},
+    {{3, 12}, 70},
 
+    {{4, 5}, 50},
+    {{4, 6}, 20},
+    {{4, 7}, 60},
+    {{4, 8}, 28},
+    {{4, 9}, 35},
+    {{4, 10}, 45},
+    {{4, 11}, 38},
+    {{4, 12}, 18},
 
-    {{4, 5}, 50}, {{4, 6}, 20}, {{4, 7}, 60}, {{4, 8}, 28}, {{4, 9}, 35},
-    {{4, 10}, 45}, {{4, 11}, 38}, {{4, 12}, 18},
+    {{5, 6}, 30},
+    {{5, 7}, 25},
+    {{5, 8}, 45},
+    {{5, 9}, 85},
+    {{5, 10}, 65},
+    {{5, 11}, 43},
+    {{5, 12}, 58},
 
-    {{5, 6}, 30}, {{5, 7}, 25}, {{5, 8}, 45}, {{5, 9}, 85}, {{5, 10}, 65},
-    {{5, 11}, 43}, {{5, 12}, 58},
+    {{6, 7}, 45},
+    {{6, 8}, 35},
+    {{6, 9}, 60},
+    {{6, 10}, 50},
+    {{6, 11}, 40},
+    {{6, 12}, 35},
 
+    {{7, 8}, 50},
+    {{7, 9}, 85},
+    {{7, 10}, 75},
+    {{7, 11}, 65},
+    {{7, 12}, 80},
 
-    {{6, 7}, 45}, {{6, 8}, 35}, {{6, 9}, 60}, {{6, 10}, 50}, {{6, 11}, 40}, {{6, 12}, 35},
+    {{8, 9}, 55},
+    {{8, 10}, 45},
+    {{8, 11}, 40},
+    {{8, 12}, 50},
 
-   
-    {{7, 8}, 50}, {{7, 9}, 85}, {{7, 10}, 75}, {{7, 11}, 65}, {{7, 12}, 80},
+    {{9, 10}, 35},
+    {{9, 11}, 45},
+    {{9, 12}, 30},
 
-    {{8, 9}, 55}, {{8, 10}, 45}, {{8, 11}, 40}, {{8, 12}, 50},
+    {{10, 11}, 25},
+    {{10, 12}, 20},
 
-    
-    {{9, 10}, 35}, {{9, 11}, 45}, {{9, 12}, 30},
+    {{11, 12}, 40}};
 
-    {{10, 11}, 25}, {{10, 12}, 20},
-
-    {{11, 12}, 40}
-};
-
-void printCities(){
-    for (auto i: cities)
+void printCities()
+{
+    for (auto i : cities)
     {
-        cout<<MAGENTA<<i.first<<". "<<i.second<<"\n";
+        cout << MAGENTA << i.first << ". " << i.second << "\n";
     }
-    cout<<RESET;
+    cout << RESET;
 }
 
 void showSpinner(int duration)
@@ -79,7 +111,7 @@ int getLastTicketNumber()
 
     if (inFile.is_open())
     {
-        inFile.read(reinterpret_cast<char*>(&lastTicketNumber), sizeof(lastTicketNumber));
+        inFile.read(reinterpret_cast<char *>(&lastTicketNumber), sizeof(lastTicketNumber));
         inFile.close();
     }
 
@@ -91,7 +123,7 @@ void updateLastTicketNumber(int newTicketNumber)
     ofstream outFile("lastTicketNumber.dat", ios::binary);
     if (outFile.is_open())
     {
-        outFile.write(reinterpret_cast<const char*>(&newTicketNumber), sizeof(newTicketNumber));
+        outFile.write(reinterpret_cast<const char *>(&newTicketNumber), sizeof(newTicketNumber));
         outFile.close();
     }
 }
@@ -105,112 +137,115 @@ private:
     int destination;
     string filename;
     int distance;
+
 public:
     Ticket() : tno(0) {}
 
     void createTicket()
     {
-    cin.ignore();
-    cout << YELLOW << "Enter customer name: " << RESET;
-    getline(cin, cname);
+        cin.ignore();
+        cout << YELLOW << "Enter customer name: " << RESET;
+        getline(cin, cname);
 
-    int lastTicketNumber = getLastTicketNumber();
-    tno = lastTicketNumber + 1;
-    updateLastTicketNumber(tno);
+        int lastTicketNumber = getLastTicketNumber();
+        tno = lastTicketNumber + 1;
+        updateLastTicketNumber(tno);
 
-    cout << YELLOW << "Generated Ticket Number: " << tno << RESET << endl;
+        cout << YELLOW << "Generated Ticket Number: " << tno << RESET << endl;
 
-    cout << YELLOW << "Enter start location:\n" << RESET;
-    printCities();
-    cout << YELLOW << "Your choice=> " << RESET;
-    cin >> start;
+        cout << YELLOW << "Enter start location:\n"
+             << RESET;
+        printCities();
+        cout << YELLOW << "Your choice=> " << RESET;
+        cin >> start;
 
-    cout << YELLOW << "Enter destination location:\n" << RESET;
-    printCities();
-    cout << YELLOW << "Your choice=> " << RESET;
-    cin >> destination;
+        cout << YELLOW << "Enter destination location:\n"
+             << RESET;
+        printCities();
+        cout << YELLOW << "Your choice=> " << RESET;
+        cin >> destination;
 
-    distance = distances[{start, destination}];
+        distance = distances[{start, destination}];
 
-    showSpinner(1);
+        showSpinner(1);
 
-    filename = to_string(tno) + ".txt";
+        filename = to_string(tno) + ".txt";
 
-    ifstream existingFile(filename);
-    if (existingFile.is_open())
-    {
-        cout << RED << "\nTicket with this number already exists." << RESET << endl;
-        existingFile.close();
-        return;
+        ifstream existingFile(filename);
+        if (existingFile.is_open())
+        {
+            cout << RED << "\nTicket with this number already exists." << RESET << endl;
+            existingFile.close();
+            return;
+        }
+
+        ofstream ticketFile(filename);
+        if (ticketFile.is_open())
+        {
+            ticketFile << "------------------------------------------\n";
+            ticketFile << "|                 TICKET                 |\n";
+            ticketFile << "------------------------------------------\n";
+            time_t now = time(0);
+            tm *ltm = localtime(&now);
+            char date[11];
+            char time[9];
+
+            strftime(date, sizeof(date), "%d/%m/%Y", ltm);
+            strftime(time, sizeof(time), "%H:%M:%S", ltm);
+
+            ticketFile << "| Date: " << date;
+            ticketFile << "        Time: " << time << " |\n";
+            ticketFile << "| Customer Name: " << cname;
+            for (int i = cname.length(); i < 24; i++)
+            {
+                ticketFile << " ";
+            }
+            ticketFile << "|\n";
+
+            ticketFile << "| Ticket Number: " << tno;
+            for (int i = to_string(tno).length(); i < 24; i++)
+            {
+                ticketFile << " ";
+            }
+            ticketFile << "|\n";
+            ticketFile << "| Start: " << cities[start];
+            for (int i = cities[start].length(); i < 32; i++)
+            {
+                ticketFile << " ";
+            }
+            ticketFile << "|\n";
+            ticketFile << "| Destination: " << cities[destination];
+            for (int i = cities[destination].length(); i < 26; i++)
+            {
+                ticketFile << " ";
+            }
+            ticketFile << "|\n";
+            ticketFile << "| Distance: " << distance << "km";
+            for (int i = to_string(distance).length(); i < 27; i++)
+            {
+                ticketFile << " ";
+            }
+            ticketFile << "|\n";
+            ticketFile << "| Price: " << setw(3) << distance * 2 << "Rs";
+            for (int i = to_string(distance).length(); i < 29; i++)
+            {
+                ticketFile << " ";
+            }
+            ticketFile << "|\n";
+            ticketFile << "------------------------------------------\n";
+            ticketFile.close();
+            cout << GREEN << "\nTicket created successfully!" << RESET << endl;
+        }
+        else
+        {
+            cout << RED << "\nUnable to open file" << RESET << endl;
+        }
     }
-
-    ofstream ticketFile(filename);
-    if (ticketFile.is_open())
-    {
-        ticketFile << "------------------------------------------\n";
-        ticketFile << "|                 TICKET                 |\n";
-        ticketFile << "------------------------------------------\n";
-        time_t now = time(0);
-        tm *ltm = localtime(&now);
-        char date[11];
-        char time[9];
-
-        strftime(date, sizeof(date), "%d/%m/%Y", ltm);
-        strftime(time, sizeof(time), "%H:%M:%S", ltm);
-
-        ticketFile << "| Date: " << date;
-        ticketFile << "        Time: " << time << " |\n";
-        ticketFile << "| Customer Name: " << cname;
-        for (int i = cname.length(); i < 24; i++)
-        {
-            ticketFile << " ";
-        }
-        ticketFile << "|\n";
-
-        ticketFile << "| Ticket Number: " << tno;
-        for (int i = to_string(tno).length(); i < 24; i++)
-        {
-            ticketFile << " ";
-        }
-        ticketFile << "|\n";
-        ticketFile << "| Start: " << cities[start];
-        for (int i = cities[start].length(); i < 32; i++)
-        {
-            ticketFile << " ";
-        }
-        ticketFile << "|\n";
-        ticketFile << "| Destination: " << cities[destination];
-        for (int i = cities[destination].length(); i < 26; i++)
-        {
-            ticketFile << " ";
-        }
-        ticketFile << "|\n";
-        ticketFile << "| Distance: " << distance << "km";
-        for (int i = to_string(distance).length(); i < 27; i++)
-        {
-            ticketFile << " ";
-        }
-        ticketFile << "|\n";
-        ticketFile << "| Price: " << setw(3) << distance * 2 << "Rs";
-        for (int i = to_string(distance).length(); i < 29; i++)
-        {
-            ticketFile << " ";
-        }
-        ticketFile << "|\n";
-        ticketFile << "------------------------------------------\n";
-        ticketFile.close();
-        cout << GREEN << "\nTicket created successfully!" << RESET << endl;
-    }
-    else
-    {
-        cout << RED << "\nUnable to open file" << RESET << endl;
-    }
-}
 
     void editTicket()
     {
         int newTno;
-        cout << YELLOW<<"Enter the new ticket number: "<<RESET;
+        cout << YELLOW << "Enter the new ticket number: " << RESET;
         cin >> newTno;
         showSpinner(2);
         string newFilename = to_string(newTno) + ".txt";
@@ -229,9 +264,9 @@ public:
                     content += "| Ticket Number: " + to_string(newTno);
                     for (int i = to_string(newTno).length(); i < 24; i++)
                     {
-                        content+=" ";
+                        content += " ";
                     }
-                    content+="|\n";
+                    content += "|\n";
                     count++;
                     continue;
                 }
@@ -242,7 +277,7 @@ public:
         }
         else
         {
-            cout <<RED<< "Unable to open file"<<RESET << endl;
+            cout << RED << "Unable to open file" << RESET << endl;
             return;
         }
 
@@ -255,21 +290,20 @@ public:
                 ticketFileOut.close();
                 tno = newTno;
                 filename = newFilename;
-                cout <<GREEN<< "Ticket number updated successfully!"<<RESET << endl;
+                cout << GREEN << "Ticket number updated successfully!" << RESET << endl;
             }
             else
             {
-                cout << RED<<"Unable to open new file"<<RESET << endl;
+                cout << RED << "Unable to open new file" << RESET << endl;
             }
         }
         else
         {
-            cout <<RED<< "Error updating ticket number"<<RESET << endl;
+            cout << RED << "Error updating ticket number" << RESET << endl;
         }
     }
 
-
-    int getTicketNumber() const
+    int getTicketNumber()
     {
         return tno;
     }
@@ -288,12 +322,12 @@ int main()
     while (true)
     {
         showSpinner(1);
-        cout <<RED<< "\nMenu:" << endl;
-        cout <<BLUE<< "1. Enter ticket details" << endl;
+        cout << RED << "\nMenu:" << endl;
+        cout << BLUE << "1. Enter ticket details" << endl;
         cout << "2. Edit ticket number" << endl;
         cout << "3. Display ticket" << endl;
         cout << "4. Exit" << endl;
-        cout<<MAGENTA<<"Your choice=> "<<RESET;
+        cout << MAGENTA << "Your choice=> " << RESET;
         cin >> choice;
 
         if (choice == 1)
@@ -303,7 +337,7 @@ int main()
         }
         else if (choice == 2)
         {
-            cout << YELLOW<<"Enter the ticket number you want to edit: "<<RESET;
+            cout << YELLOW << "Enter the ticket number you want to edit: " << RESET;
             int ticketNumber;
             cin >> ticketNumber;
             string filename = to_string(ticketNumber) + ".txt";
@@ -317,11 +351,12 @@ int main()
             }
             else
             {
-                cout <<RED<< "Ticket not found" <<RESET<< endl;
+                cout << RED << "Ticket not found" << RESET << endl;
             }
         }
-        else if (choice == 3){
-            cout <<YELLOW<< "Enter the ticket number you want to display: "<<RESET;
+        else if (choice == 3)
+        {
+            cout << YELLOW << "Enter the ticket number you want to display: " << RESET;
             int ticketNumber;
             cin >> ticketNumber;
             string filename = to_string(ticketNumber) + ".txt";
@@ -329,8 +364,8 @@ int main()
             if (ticketFile.is_open())
             {
                 string line;
-                vector<string> colors = {RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN};
-                srand(time(0)); 
+                vector<string> colors = {RED, GREEN, BLUE, MAGENTA, CYAN};
+                srand(time(0));
                 string color = colors[rand() % colors.size()];
                 while (getline(ticketFile, line))
                 {
@@ -341,19 +376,19 @@ int main()
             }
             else
             {
-                cout <<RED <<"Ticket not found" <<RESET<< endl;
+                cout << RED << "Ticket not found" << RESET << endl;
             }
         }
-        else if(choice == 4)
+        else if (choice == 4)
         {
             break;
         }
         else
         {
-            cout <<RED<< "Invalid choice. Please try again ." <<RESET<< endl;
+            cout << RED << "Invalid choice. Please try again ." << RESET << endl;
         }
     }
-    cout<<RESET;
+    cout << RESET;
 
     return 0;
 }
